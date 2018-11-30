@@ -39,6 +39,7 @@ pipeline_initial_stage_execution_id = environ.get('PIPELINE_INITIAL_STAGE_EXECUT
 workspace = environ.get('WORKSPACE')
 github_token = environ.get('github_accessToken')
 
+print("GIT_URL:", git_url)
 
 # Load toolchain json to dict for parsing
 toolchain_json = "%s/_toolchain.json" % workspace
