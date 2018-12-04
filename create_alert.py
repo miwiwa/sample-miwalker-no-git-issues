@@ -110,7 +110,7 @@ def trigger_incident():
 		
 def trigger_issue(title, body=None, labels=None):
 	# Function creates request to create Git Issue and submits
-    git_repo_owner = environ.get('GIT_OWNER_NAME')
+    git_repo_owner = environ.get('GIT_REPO_OWNER')
     git_repo_name = environ.get('GIT_REPO_NAME')
     
     print("git_repo_owner:", git_repo_owner)
