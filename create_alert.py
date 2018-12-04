@@ -40,7 +40,6 @@ pipeline_initial_stage_execution_id = environ.get('PIPELINE_INITIAL_STAGE_EXECUT
 workspace = environ.get('WORKSPACE')
 github_token = environ.get('github_accessToken')
 
-print("archive_dir:",archive_dir)
 
 # Load toolchain json to dict for parsing
 toolchain_json = "%s/_toolchain.json" % workspace
@@ -55,7 +54,7 @@ ids_instance_id = instance_id[0]
 
 pipeline_base_url = "https://console.bluemix.net/devops/pipelines/" 
 pipeline_full_url = pipeline_base_url + pipeline_id + "/" + pipeline_stage_id +  "/" + ids_job_id + "?env_id=" + ids_region_id
-
+print("pipeline_full_url:", pipeline_full_url)
 
 def trigger_incident():
 	# Function creates request to create new PagerDuty incident and submits
@@ -113,6 +112,9 @@ def trigger_issue(title, body=None, labels=None):
 	# Function creates request to create Git Issue and submits
     git_repo_owner = environ.get('GIT_OWNER_NAME')
     git_repo_name = environ.get('GIT_REPO_NAME')
+    
+    print("git_repo_owner:", git_repo_owner)
+    print("git_repo_name:", git_repo_name)
     
     api_base_url = "https://api.github.ibm.com/"
     if git_repo_owner is not None and git_repo_name is not None:
