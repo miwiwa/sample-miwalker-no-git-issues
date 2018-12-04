@@ -119,7 +119,7 @@ def trigger_issue(title, body=None, labels=None):
       print("Values already given")
       print("git_repo_owner:", git_repo_owner)
       print("git_repo_name:", git_repo_name)
-    elif git_url is None:
+    elif git_url is not None:
       print("Parsing git_url")
       git_repo_name = re.search(r'(.*)/(.*)', git_url).group(2).split('.')[0]
       git_repo_owner = re.search(r'(.*)/(.*)', git_url).group(1).split('/')[3]
