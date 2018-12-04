@@ -27,6 +27,7 @@ alerts = args.ALERTS
 ids_job_name = str(environ.get('IDS_JOB_NAME'))
 ids_job_id = environ.get('IDS_JOB_ID')
 ids_stage_name = str(environ.get('IDS_STAGE_NAME'))
+print("ids_stage_name:", ids_stage_name)
 ids_project_name = environ.get('IDS_PROJECT_NAME')
 ids_url = environ.get('IDS_URL')
 git_url = environ.get('GIT_URL')
@@ -112,6 +113,7 @@ def trigger_issue(title, body=None, labels=None):
 	# Function creates request to create Git Issue and submits
     git_repo_owner = environ.get('GIT_REPO_OWNER')
     git_repo_name = environ.get('GIT_REPO_NAME')
+    git_issue_label = environ.get('GIT_ISSUE_LABEL')
     
     print("git_repo_owner:", git_repo_owner)
     print("git_repo_name:", git_repo_name)
@@ -136,6 +138,9 @@ def trigger_issue(title, body=None, labels=None):
         print("ERROR: Git Issues is not configured correctly with the toolchain")
         return 1
 
+    if git_issue_label is None:
+      git_issue_label = 'bug'
+    	
     headers = {
         "Content-Type": "application/json",
         "Authorization": "token " + github_token
@@ -165,11 +170,11 @@ if __name__ == '__main__':
 	
 	if all(alert_type in alerts for alert_type in ('incident', 'issue')):		
 		trigger_incident()	
-		trigger_issue("Job: " + ids_job_name + " in Stage: " + ids_stage_name + " and Project: " + ids_project_name + " failed", pipeline_full_url, ['bug'])	
+		trigger_issue("Job: " + ids_job_name + " in Stage: " + ids_stage_name + " and Project: " + ids_project_name + " failed", pipeline_full_url, git_issue_label)	
 	elif 'incident' in alerts:		
 		trigger_incident()
 	elif 'issue' in alerts:
-		trigger_issue("Job: " + ids_job_name + " in Stage: " + ids_stage_name + " failed", pipeline_full_url, ['bug'])
+		trigger_issue("Job: " + ids_job_name + " in Stage: " + ids_stage_name + " failed", pipeline_full_url, git_issue_label)
 	else:
 		print("Alert type was not specified in call")
 
