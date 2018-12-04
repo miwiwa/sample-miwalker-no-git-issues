@@ -117,7 +117,7 @@ def trigger_issue(title, body=None, labels=None):
     
     print("git_repo_owner:", git_repo_owner)
     print("git_repo_name:", git_repo_name)
-    
+    print("git_issue_label:", git_issue_label)
     #api_base_url = "https://api.github.ibm.com/"
     api_base_url = "https://api.github.com/"
     if git_repo_owner is not None and git_repo_name is not None:
@@ -140,6 +140,8 @@ def trigger_issue(title, body=None, labels=None):
 
     if git_issue_label is None:
       git_issue_label = 'bug'
+    else:
+      git_issue_label = 'else'
     	
     headers = {
         "Content-Type": "application/json",
