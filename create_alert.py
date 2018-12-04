@@ -11,6 +11,8 @@ import argparse
 from os import environ
 import subprocess
 import re
+import collections
+import sys
 
 # Read in argument(s)
 description = 'Specify creation of incident/issue in Pagerduty and Git Issues'
@@ -23,14 +25,13 @@ alerts = args.ALERTS
 
 # Import Pipeline environment variables 
 ids_job_name = environ.get('IDS_JOB_NAME')
-#ids_job_name = IDS_JOB_NAME#print(type(ids_job_name))
 ids_job_id = environ.get('IDS_JOB_ID')
-print(type(ids_job_id))
 ids_stage_name = environ.get('IDS_STAGE_NAME')
 ids_project_name = environ.get('IDS_PROJECT_NAME')
 ids_url = environ.get('IDS_URL')
 git_url = environ.get('GIT_URL')
 task_id = environ.get('TASK_ID')
+archive_dir = environ.get('ARCHIVE_DIR')
 pipeline_id = environ.get('PIPELINE_ID')
 pipeline_stage_id = environ.get('PIPELINE_STAGE_ID')
 pipeline_stage_name = environ.get('PIPELINE_STAGE_NAME')
@@ -39,7 +40,7 @@ pipeline_initial_stage_execution_id = environ.get('PIPELINE_INITIAL_STAGE_EXECUT
 workspace = environ.get('WORKSPACE')
 github_token = environ.get('github_accessToken')
 
-print("GIT_URL:", git_url)
+print("archive_dir:",archive_dir)
 
 # Load toolchain json to dict for parsing
 toolchain_json = "%s/_toolchain.json" % workspace
@@ -110,23 +111,28 @@ def trigger_incident():
 		
 def trigger_issue(title, body=None, labels=None):
 	# Function creates request to create Git Issue and submits
-	
+    git_repo_owner = environ.get('GIT_OWNER_NAME')
+    git_repo_name = environ.get('GIT_REPO_NAME')
+    
     api_base_url = "https://api.github.ibm.com/"
-    
-    
-    
-    git_repo_name = re.search(r'(.*)/(.*)',git_url).group(2).split('.')[0]
-    git_repo_owner = re.search(r'(.*)/(.*)',git_url).group(1)
-  
-    
-    try:
-      repo_owner = [i['parameters']['owner_id'] for i in data["services"] if 'git' in i['broker_id']]
-      git_repo_owner = repo_owner[0]
-     # git_repo_name = repo_name[0]
-    except (KeyError, IndexError):
-      print("ERROR: Git Issues is not configured correctly with the toolchain")
-      return 1
-    
+    if git_repo_owner is not None and git_repo_name is not None:
+      print("Values already given")
+      print("git_repo_owner:", git_repo_owner)
+      print("git_repo_name:", git_repo_name)
+    elif git_url is None:
+      print("Parsing git_url")
+      git_repo_name = re.search(r'(.*)/(.*)', git_url).group(2).split('.')[0]
+      git_repo_owner = re.search(r'(.*)/(.*)', git_url).group(1).split('/')[3]
+      print("git_repo_owner:", git_repo_owner)
+      print("git_repo_name:", git_repo_name)
+    else:
+      try:
+        repo_owner = [i['parameters']['owner_id'] for i in data["services"] if 'git' in i['broker_id']]
+        repo_name = [i['parameters']['repo_name'] for i in data["services"] if 'git' in i['broker_id']]
+      except (KeyError, IndexError):
+        print("ERROR: Git Issues is not configured correctly with the toolchain")
+        return 1
+
     headers = {
         "Content-Type": "application/json",
         "Authorization": "token " + github_token
@@ -137,6 +143,7 @@ def trigger_issue(title, body=None, labels=None):
              'labels': labels}
     
     # Specifies URL for github api
+    print("Specifying URL for base call")
     url = api_base_url + "repos/" + git_repo_owner + "/" + git_repo_name + "/issues"
     r = requests.post(url, headers=headers, data=json.dumps(issue))
   	
