@@ -40,7 +40,7 @@ pipeline_stage_input_job_id = environ.get('PIPELINE_STAGE_INPUT_JOB_ID')
 pipeline_initial_stage_execution_id = environ.get('PIPELINE_INITIAL_STAGE_EXECUTION_ID')
 workspace = environ.get('WORKSPACE')
 github_token = environ.get('github_accessToken')
-git_issue_label = environ.get('GIT_ISSUE_LABEL')
+
 
 
 # Load toolchain json to dict for parsing
@@ -110,11 +110,11 @@ def trigger_incident():
     else:
 		print("PagerDuty incident request created successfully")
 		
-def trigger_issue(title, body=None, labels=None):
+def trigger_issue(title, body=None):
 	# Function creates request to create Git Issue and submits
     git_repo_owner = environ.get('GIT_REPO_OWNER')
     git_repo_name = environ.get('GIT_REPO_NAME')
-    
+    git_issue_label = environ.get('GIT_ISSUE_LABEL')
     
     print("git_repo_owner:", git_repo_owner)
     print("git_repo_name:", git_repo_name)
@@ -140,9 +140,7 @@ def trigger_issue(title, body=None, labels=None):
         return 1
 
     if git_issue_label is None:
-      git_issue_label = 'bug'
-    else:
-      git_issue_label = 'else'
+      git_issue_label = 'feature'
     	
     headers = {
         "Content-Type": "application/json",
@@ -151,7 +149,7 @@ def trigger_issue(title, body=None, labels=None):
 
     issue = {'title': title,
              'body': body,
-             'labels': labels}
+             'labels': git_issue_label}
     
     # Specifies URL for github api
     print("Specifying URL for base call")
@@ -174,11 +172,11 @@ if __name__ == '__main__':
 	
 	if all(alert_type in alerts for alert_type in ('incident', 'issue')):		
 		trigger_incident()	
-		trigger_issue("Job: " + ids_job_name + " in Stage: " + ids_stage_name + " and Project: " + ids_project_name + " failed", pipeline_full_url, git_issue_label)	
+		trigger_issue("Job: " + ids_job_name + " in Stage: " + ids_stage_name + " and Project: " + ids_project_name + " failed", pipeline_full_url)	
 	elif 'incident' in alerts:		
 		trigger_incident()
 	elif 'issue' in alerts:
-		trigger_issue("Job: " + ids_job_name + " in Stage: " + ids_stage_name + " failed", pipeline_full_url, git_issue_label)
+		trigger_issue("Job: " + ids_job_name + " in Stage: " + ids_stage_name + " failed", pipeline_full_url)
 	else:
 		print("Alert type was not specified in call")
 
