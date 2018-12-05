@@ -113,7 +113,7 @@ def trigger_issue(title, body=None, labels=None):
 	# Function creates request to create Git Issue and submits
     git_repo_owner = environ.get('GIT_REPO_OWNER')
     git_repo_name = environ.get('GIT_REPO_NAME')
-    git_issue_label = environ.get('GIT_ISSUE_LABEL')
+    
     
     print("git_repo_owner:", git_repo_owner)
     print("git_repo_name:", git_repo_name)
@@ -153,8 +153,10 @@ def trigger_issue(title, body=None, labels=None):
              'labels': labels}
     
     # Specifies URL for github api
+    git_issue_label = environ.get('GIT_ISSUE_LABEL')
     print("Specifying URL for base call")
     url = api_base_url + "repos/" + git_repo_owner + "/" + git_repo_name + "/issues"
+    print("url", url)
     r = requests.post(url, headers=headers, data=json.dumps(issue))
   	
     if r.status_code != 201:
