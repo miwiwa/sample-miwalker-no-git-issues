@@ -40,7 +40,7 @@ pipeline_stage_input_job_id = environ.get('PIPELINE_STAGE_INPUT_JOB_ID')
 pipeline_initial_stage_execution_id = environ.get('PIPELINE_INITIAL_STAGE_EXECUTION_ID')
 workspace = environ.get('WORKSPACE')
 github_token = environ.get('github_accessToken')
-git_issue_label = environ.get('GIT_ISSUE_LABEL)
+git_issue_label = environ.get('GIT_ISSUE_LABEL')
 
 
 # Load toolchain json to dict for parsing
