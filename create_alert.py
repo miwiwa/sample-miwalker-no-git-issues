@@ -118,7 +118,7 @@ def trigger_issue(title, body=None, labels=None):
     
     print("git_repo_owner:", git_repo_owner)
     print("git_repo_name:", git_repo_name)
-    print("git_issue_label:", git_issue_label)
+    
     #api_base_url = "https://api.github.ibm.com/"
     api_base_url = "https://api.github.com/"
     if git_repo_owner is not None and git_repo_name is not None:
