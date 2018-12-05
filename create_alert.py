@@ -24,7 +24,8 @@ args = parser.parse_args()
 alerts = args.ALERTS
 
 # Import Pipeline environment variables 
-ids_job_name = str(environ.get('IDS_JOB_NAME'))
+print(str(environ.get('IDS_JOB_NAME')))
+ids_job_name = environ.get('IDS_JOB_NAME')
 ids_job_id = environ.get('IDS_JOB_ID')
 ids_stage_name = str(environ.get('IDS_STAGE_NAME'))
 print("ids_stage_name:", ids_stage_name)
