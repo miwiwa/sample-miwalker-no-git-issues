@@ -40,6 +40,7 @@ pipeline_stage_input_job_id = environ.get('PIPELINE_STAGE_INPUT_JOB_ID')
 pipeline_initial_stage_execution_id = environ.get('PIPELINE_INITIAL_STAGE_EXECUTION_ID')
 workspace = environ.get('WORKSPACE')
 github_token = environ.get('github_accessToken')
+git_issue_label = environ.get('GIT_ISSUE_LABEL)
 
 
 # Load toolchain json to dict for parsing
@@ -153,7 +154,6 @@ def trigger_issue(title, body=None, labels=None):
              'labels': labels}
     
     # Specifies URL for github api
-    git_issue_label = environ.get('GIT_ISSUE_LABEL')
     print("Specifying URL for base call")
     url = api_base_url + "repos/" + git_repo_owner + "/" + git_repo_name + "/issues"
     print("url", url)
