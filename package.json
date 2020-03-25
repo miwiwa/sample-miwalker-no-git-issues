@@ -51,7 +51,7 @@
     "cf-deployment-tracker-client": "0.0.7",
     "request": "^2.60.0",
     "sinon": "^1.17.3",
-    "phantomjs": "^1.9.16"
+    "phantomjs": "^2.1.1"
   },
   "devDependencies": {
     "async": "*",
